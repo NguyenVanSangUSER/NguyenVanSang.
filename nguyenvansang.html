@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nguyễn Văn Sang</title>
+
+<style>
+/* ---------------------- GENERAL ---------------------- */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at center, #2b2b2b, #1a1a1a);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -2;
+}
+
+/* ---------------------- CARD ---------------------- */
+.card {
+    width: 380px;
+    padding: 30px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.10);
+    border: 2px solid #00eaff;
+    backdrop-filter: blur(15px);
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0,255,255,0.3);
+}
+
+/* ---------------------- AVATAR ---------------------- */
+.avatar-wrapper {
+    width: 150px;   /* nhỏ lại */
+    height: 150px;  /* nhỏ lại */
+    margin: auto;
+    padding: 6px;
+    border-radius: 50%;
+    background: linear-gradient(45deg,#00eaff,#b400ff);
+    box-shadow: 0 0 25px #00eaff;
+    transition: transform 0.08s linear;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 0 25px rgba(255,255,255,0.4);
+    animation: glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 15px #00eaff; }
+    100% { box-shadow: 0 0 30px #ff00ff; }
+}
+
+/* ---------------------- NAME ---------------------- */
+.name {
+    font-size: 26px; /* nhỏ lại */
+    font-weight: bold;
+    margin-top: 18px;
+    color: #00d0ff;
+    padding: 8px 20px;
+    border-radius: 14px;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 15px #00ff00;
+    display: inline-block;
+}
+
+/* ---------------------- SOCIAL ICONS ---------------------- */
+.social-icons {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+}
+
+.icon {
+    width: 55px; height: 55px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 16px;
+    display: flex; justify-content: center; align-items: center;
+    backdrop-filter: blur(10px);
+    transition: 0.25s;
+    box-shadow: 0 0 15px #00eaff55;
+}
+
+.icon:hover {
+    transform: scale(1.23) rotate(8deg);
+    box-shadow: 0 0 25px #00eaff, 0 0 25px #00eaff inset;
+}
+
+.icon img {
+    width: 28px;
+}
+
+/* ---------------------- MUSIC BOX ---------------------- */
+.music-box {
+    margin-top: 25px;
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 18px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px #00ddff33;
+}
+
+/* ---------------------- LYRICS ---------------------- */
+#lyricBox {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    color: #00ffea;
+    font-weight: bold;
+    text-shadow: 0 0 12px #00ffff;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="effect"></canvas>
+
+<div class="card">
+    <div class="avatar-wrapper">
+        <div class="avatar" id="avatarBox"></div>
+    </div>
+
+    <h2 class="name">NGUYỄN VĂN SANG</h2>
+
+    <div class="social-icons">
+        <a class="icon" href="https://facebook.com/nguyenvansangmedia178" target="_blank" rel="noreferrer">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="fb">
+        </a>
+
+        <a class="icon" href="https://instagram.com/nguyenvansangmedia178" target="_blank" rel="noreferrer">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="ig">
+        </a>
+
+        <a class="icon" href="https://t.me/nguyenvansangmedia" target="_blank" rel="noreferrer">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="tg">
+        </a>
+
+        <a class="icon" href="https://tiktok.com/@roikhinaotaogiau" target="_blank" rel="noreferrer">
+            <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="tt">
+        </a>
+    </div>
+
+    <div class="music-box">
+        <b>Nhạc nền</b><br><br>
+        <audio id="musicPlayer" controls></audio>
+    </div>
+</div>
+
+<div id="lyricBox"></div>
+
+<script>
+/* ---------------------- AVATAR AUTO DETECT ---------------------- */
+const avatarBox = document.getElementById("avatarBox");
+const avatarList = ["avatar.jpg","avatar.png","avatar.jpeg","avatar.webp"];
+
+async function loadAvatar() {
+    for (let file of avatarList) {
+        try {
+            let r = await fetch(file);
+            if (r.ok) {
+                avatarBox.style.backgroundImage = `url('${file}')`;
+                return;
+            }
+        } catch(e){}
+    }
+}
+loadAvatar();
+
+/* ---------------------- MUSIC AUTO DETECT ---------------------- */
+const musicPlayer = document.getElementById("musicPlayer");
+const musicList = ["music.mp3","song.mp3","music.wav","song.wav","audio.mp3","track.mp3"];
+
+async function loadMusic() {
+    for (let file of musicList) {
+        try {
+            let r = await fetch(file);
+            if (r.ok) {
+                musicPlayer.src = file;
+                loadLyrics();
+                return;
+            }
+        } catch(e){}
+    }
+}
+loadMusic();
+
+/* ---------------------- LYRICS ---------------------- */
+let lyrics=[];
+function loadLyrics(){
+    fetch("lyrics.lrc")
+        .then(r=>r.text())
+        .then(t=>{
+            lyrics = parseLRC(t);
+            updateLyrics();
+        }).catch(()=>{ /* no lyrics file - ignore */ });
+}
+
+function parseLRC(t){
+    return t.split("\n").map(l=>{
+        let m=l.match(/\[(\d+):(\d+\.\d+)\](.*)/);
+        if(!m)return null;
+        return {time:parseInt(m[1])*60+parseFloat(m[2]), text:m[3]};
+    }).filter(v=>v);
+}
+
+function updateLyrics(){
+    let t=musicPlayer.currentTime || 0;
+    for(let i=lyrics.length-1;i>=0;i--){
+        if(t>=lyrics[i].time){
+            lyricBox.textContent=lyrics[i].text;
+            break;
+        }
+    }
+    requestAnimationFrame(updateLyrics);
+}
+
+/* ---------------------- CLOVER & HEART FALL EFFECT (canvas) ---------------------- */
+const cvs=document.getElementById("effect"), c=cvs.getContext("2d");
+function resizeCanvas(){ cvs.width = innerWidth; cvs.height = innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const icons=["🍀","💖","❤️","🍀","💚"];
+const drops=Array.from({length:90},()=>(({
+  x:Math.random()*cvs.width,
+  y:Math.random()*cvs.height,
+  size:Math.random()*22+12,
+  speed:Math.random()*1.2+0.5,
+  char:icons[Math.floor(Math.random()*icons.length)]
+})));
+
+function draw(){
+ c.clearRect(0,0,cvs.width,cvs.height);
+ drops.forEach(s=>{
+   c.font=s.size+"px Arial";
+   c.shadowColor="#fff"; c.shadowBlur=20;
+   c.fillText(s.char,s.x,s.y);
+   s.y+=s.speed; if(s.y>cvs.height) s.y = -20 - Math.random()*100;
+   // gentle horizontal drift
+   s.x += Math.sin((s.y + s.x) * 0.01) * 0.6;
+   if(s.x > cvs.width) s.x = 0;
+   if(s.x < 0) s.x = cvs.width;
+ });
+ requestAnimationFrame(draw);
+}
+draw();
+
+/* ---------------------- AUDIO VISUALIZER & AVATAR FX (merged) ---------------------- */
+const avatarWrapper = document.querySelector('.avatar-wrapper');
+
+let audioCtx = null;
+let sourceNode = null;
+let analyser = null;
+let dataArray = null;
+let visualizerRunning = false;
+
+function initVisualizer() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    sourceNode = audioCtx.createMediaElementSource(musicPlayer);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256; // reasonable resolution
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    sourceNode.connect(analyser);
+    analyser.connect(audioCtx.destination);
+}
+
+function visualizerLoop(){
+    if (!analyser || !dataArray) return;
+    analyser.getByteFrequencyData(dataArray);
+
+    // compute bands
+    const bass = (dataArray[2] + dataArray[3]) / 2 / 255;   // low freq
+    const mid = (dataArray[10] + dataArray[11]) / 2 / 255;  // mid freq
+    const high = (dataArray[30] + dataArray[31]) / 2 / 255; // high freq
+
+    // scale + slight rotate (beat & shake)
+    const scale = 1 + bass * 0.38; // pulse strength
+    const rotate = (bass - mid) * 6; // small rotation
+    const shakeX = (Math.random() - 0.5) * bass * 2; // subtle random shake
+    const shakeY = (Math.random() - 0.5) * bass * 2;
+    avatarWrapper.style.transform = `translate(${shakeX}px, ${shakeY}px) scale(${scale}) rotate(${rotate}deg)`;
+
+    // color-react glow using high freq for hue
+    const hue = Math.floor(high * 360);
+    const glowSize = 18 + high * 60 + bass * 30;
+    avatarWrapper.style.boxShadow = `0 0 ${glowSize}px hsl(${hue}, 90%, 60%)`;
+
+    // stronger glow pulse overlay (CSS filter drop-shadow)
+    const pulse = 10 + Math.abs(Math.sin(Date.now() / 120)) * (20 + bass * 60);
+    avatarWrapper.style.filter = `drop-shadow(0 0 ${pulse}px rgba(0,200,255,0.8))`;
+
+    requestAnimationFrame(visualizerLoop);
+}
+
+// ensure visualizer starts on first play and audio context resumed on user interaction
+musicPlayer.addEventListener('play', async () => {
+    try {
+        // create audio graph if not created
+        initVisualizer();
+        // resume in case context was suspended by browser
+        await audioCtx.resume();
+        if (!visualizerRunning) {
+            visualizerRunning = true;
+            visualizerLoop();
+        }
+    } catch (e) {
+        console.warn('Audio visualizer init error', e);
+    }
+});
+
+</script>
+
+</body>
+</html>
