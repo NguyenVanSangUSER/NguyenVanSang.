@@ -1,160 +1,152 @@
-/* General Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* ---------------------- GENERAL ---------------------- */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at center, #030303, #000000);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-/* Container */
-.container {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
-  width: 100%;
-  padding: 40px;
+/* BACKGROUND EFFECT */
+canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -2;
 }
 
-/* Header */
-h1 {
-  color: #333;
-  margin-bottom: 10px;
-  text-align: center;
-  font-size: 28px;
+/* ---------------------- CARD ---------------------- */
+.card {
+    width: 380px;
+    padding: 30px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.10);
+    border: 2px solid;
+    backdrop-filter: blur(18px);
+    text-align: center;
+    animation: borderColor 4s linear infinite;
+    box-shadow: 0 0 25px rgba(0,255,255,0.2), 0 0 45px rgba(0,255,255,0.1);
+}
+@keyframes borderColor {
+    0% { border-color:#ff004c; }
+    25% { border-color:#ffdd00; }
+    50% { border-color:#00eaff; }
+    75% { border-color:#b400ff; }
+    100% { border-color:#ff004c; }
 }
 
-.subtitle {
-  color: #666;
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 14px;
+/* ---------------------- AVATAR ---------------------- */
+.avatar-wrapper {
+    width: 170px; 
+    height: 170px;
+    margin: auto;
+    padding: 10px;
+    border-radius: 50%;
+    background: black;
+    box-shadow: 0 0 25px cyan inset;
 }
 
-/* Form Styles */
-.form-group {
-  margin-bottom: 20px;
+.avatar {
+    width: 100%; 
+    height: 100%;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
 }
 
-label {
-  display: block;
-  color: #333;
-  font-weight: 500;
-  margin-bottom: 8px;
-  font-size: 14px;
+/* ---------------------- NAME ---------------------- */
+.name {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 18px;
+    color: #00d0ff;
+    padding: 8px 20px;
+    border-radius: 14px;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 20px #00ff00;
+    display: inline-block;
 }
 
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  font-family: inherit;
-  transition: border-color 0.3s;
+/* ---------------------- SOCIAL ICONS ---------------------- */
+.social-icons {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+.icon {
+    width: 52px; height: 52px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    backdrop-filter: blur(12px);
+    transition: 0.25s;
+    box-shadow: 0 0 15px #00eaff55;
+}
+.icon:hover {
+    transform: scale(1.22);
+    box-shadow: 0 0 25px #00eaff, 0 0 35px #00eaff inset;
+}
+.icon svg { width: 28px; fill: white; }
+
+/* ---------------------- NEON BUTTON ---------------------- */
+.btn-neon {
+    margin-top: 18px;
+    padding: 14px 35px;
+    width: 85%;
+    border-radius: 14px;
+    font-size: 18px;
+    color: white;
+    background: transparent;
+    border: 2px solid #00eaff;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 12px #00eaff;
+}
+.btn-neon:hover {
+    background: #00eaff;
+    color: black;
+    transform: scale(1.08);
+    box-shadow: 0 0 25px #00eaff;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 120px;
+/* ---------------------- MUSIC BOX ---------------------- */
+.music-box {
+    margin-top: 25px;
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 18px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px #00ddff33;
 }
 
-/* Button Styles */
-.button-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 30px;
+audio { width: 100%; }
+
+/* ---------------------- TIMER ---------------------- */
+#timer { 
+    margin-top: 20px; 
+    color:#00ffcc; 
 }
 
-button {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 5px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.btn-submit {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
-
-.btn-reset {
-  background: #f0f0f0;
-  color: #333;
-  border: 1px solid #ddd;
-}
-
-.btn-reset:hover {
-  background: #e0e0e0;
-}
-
-/* Success Message */
-.success-message {
-  display: none;
-  background: #d4edda;
-  border: 1px solid #c3e6cb;
-  color: #155724;
-  padding: 12px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.success-message.show {
-  display: block;
-  animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .container {
-    padding: 30px 20px;
-  }
-
-  h1 {
+/* ---------------------- LYRICS ---------------------- */
+#lyricBox {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 24px;
-  }
+    color: #00ffea;
+    font-weight: bold;
+    text-shadow: 0 0 12px #00ffff;
+}
 
-  .button-group {
-    flex-direction: column;
-  }
+/* ---------------------- MOBILE ---------------------- */
+@media (max-width: 430px) { 
+    .card { width: 90%; } 
 }
